@@ -1,6 +1,7 @@
 // @ts-check
 
-import { state, Task } from "./state.js";
+import { state, Task } from "./state";
+import { addTaskToHtml, updateHtmlTask } from './tasks'
 
 /**
  * When an error occurs, the entire page will be replaced with the following message

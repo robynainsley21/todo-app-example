@@ -1,10 +1,22 @@
+//@ts-check
+/**
+ * Notes by author + from lecture
+ * - Do not write abstractions specifically according to SOLID rules, just use them as guides
+ * - SOLID methods used
+ *  - SRP (each object has their own purpose or responsibility; specificity)
+ *  - DIP (depending on abstractions)
+ */
+
+import { getHtml, doesHtmlExist } from "./helpers";
+import { Task } from './state';
+
 /**
  * Main function to display and add each task
  * Tasks should not be deletable by default, unless they are completed
  * (id param comes from the state.js file)
  * @param {string} id
  * */ 
-const addTaskToHtml = (id) => {
+export const addTaskToHtml = (id) => {
     //checking if the id is in the html already 
     if(doesHtmlExist('task', id)) {
         throw new Error('Task with that id already added');
@@ -60,7 +72,7 @@ const addTaskToHtml = (id) => {
  *  - Partial: makes properties optional
  *  - Required: makes properties required
  */
-const updateHtmlTask = (id, changes) => {
+export const updateHtmlTask = (id, changes) => {
     const element = document.querySelector(`[data-task=${id}]`);
     const isHtmlElement = element instanceof HTMLElement;
     if(!isHtmlElement) throw new Error(`${element} not found in HTML`);
@@ -71,4 +83,4 @@ const updateHtmlTask = (id, changes) => {
  * the behavior associated (abstraction built from other abstractions that composes and combines
  * them into a higher level idea)
  */
-export const addTask = 
+// export const addTask = 

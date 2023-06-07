@@ -1,12 +1,11 @@
-
-
+//@ts-check
 
 /**
  * @param {string} dataAtrr
  * @param {string} [value] - value is in [] to indicate that it is optional
  * @returns {HTMLElement} - what returns must be an html element
  */
-const getHtml = (dataAtrr, value) => {
+export const getHtml = (dataAtrr, value) => {
     const selector = value ? `[data-${dataAtrr}='${value}']` : `[data-${dataAtrr}]`;
     /**
      * Checking if element exists in case element is moved, or file containing element is moved
@@ -24,7 +23,7 @@ const getHtml = (dataAtrr, value) => {
  * @param {string} [value]
  * @returns {boolean}
  */
-const doesHtmlExist = (dataAtrr, value) => {
+export const doesHtmlExist = (dataAtrr, value) => {
     const selector = value 
     ? `[data-${dataAtrr}='${value}']`
     : `[data-${dataAtrr}]`;
