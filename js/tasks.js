@@ -23,7 +23,7 @@ export const addTaskToHtml = (id) => {
 
     } 
     //checking if data-list exists
-    const list = getHtml('list');
+    const list = getHtml({ dataAtrr: 'list' });
     //previous code before abstraction
     // const list = document.querySelector('[data-list]');
     // const test = list instanceof HTMLElement;    
@@ -38,24 +38,25 @@ export const addTaskToHtml = (id) => {
     preview.innerHTML = /* html */ `
         <li class="task">
             <label class="task__check">
-                <input class="task__input" type="checkbox" />
+                <input class="task__input" data-checkbox type="checkbox" disabled/>
             </label>
-            <button class="task__title">
+
+            <button class="task__title" data-table disabled>
                 Wash th Dog asda sdasd asd as ddas Dog asda sdasd asd as ddase Dog
                 asda sdasd asd as ddas
             </button>
-            <label class="task__check">
+
+            <button class="task__check" data-delete style='display: none'>
                 <svg
                     class="task__icon"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 96 960 960"
-                    style='display: none'
                 >
                     <path
                         d="M253 961q-40.212 0-67.606-27.1Q158 906.8 158 867V314h-58v-94h231v-48h297v48h232v94h-58v553q0 39.05-27.769 66.525Q746.463 961 707 961H253Zm454-647H253v553h454V314ZM354 789h77V390h-77v399Zm175 0h78V390h-78v399ZM253 314v553-553Z"
                     ></path>
                 </svg>
-            </label>
+            </button>
         </li> 
     `;
     
@@ -73,14 +74,40 @@ export const addTaskToHtml = (id) => {
  *  - Required: makes properties required
  */
 export const updateHtmlTask = (id, changes) => {
-    const element = document.querySelector(`[data-task=${id}]`);
-    const isHtmlElement = element instanceof HTMLElement;
-    if(!isHtmlElement) throw new Error(`${element} not found in HTML`);
-}
+    // Keep in mind that 'due' and 'urgency' can also be passed but we dont do anything with them yet
+    const { completed, due, title, urgency } = changes;
 
+    //An html element
+    const element = getHtml('task', id);
+
+    const hasCompleted = completed !== undefined;
+    const hasDue = due !== undefined;
+    const hasTitle = title !== undefined;
+    const hasUrgency = urgency !== undefined;
+
+    if(hasCompleted){
+        const inner = getHtml({ dataAtrr: 'checkbox', target: element });
+        inner.selected = completed;
+    };
+
+    if(hasTitle){
+        const inner = getHtml({ dataAtrr: 'checkbox', target: element });
+    };
+
+}
 /**
  * Abstracted function that has beem composed of previous two functions and encapsulates all 
  * the behavior associated (abstraction built from other abstractions that composes and combines
  * them into a higher level idea)
+ * @param {Omit<Props, 'completed'>} props
  */
-// export const addTask = 
+export const createTask = (props) => {
+    const id = createUniqueId();
+    addTaskToHtml(id);
+
+    updateHtmlTask(id, {
+        completed: false,
+        ...props
+        }        
+    )
+}
