@@ -7,7 +7,7 @@
  *  - DIP (depending on abstractions)
  */
 
-import { getHtml, doesHtmlExist } from "./helpers";
+import { getHtml, doesHtmlExist, createUniqueId } from "./helpers";
 import { Task } from './state';
 
 /**
@@ -41,7 +41,7 @@ export const addTaskToHtml = (id) => {
                 <input class="task__input" data-checkbox type="checkbox" disabled/>
             </label>
 
-            <button class="task__title" data-table disabled>
+            <button class="task__title" data-title disabled>
                 Wash th Dog asda sdasd asd as ddas Dog asda sdasd asd as ddase Dog
                 asda sdasd asd as ddas
             </button>
@@ -60,14 +60,14 @@ export const addTaskToHtml = (id) => {
         </li> 
     `;
     
-    list.appendChild(preview)
+    list.appendChild(preview);
 }
 
 /**
  * Inital jsdoc
  * Allows user to edit task
  * @param {string} id - string in the callback
- * @param {Partial<Pick<Task, 'completed' | 'due' | 'title' | 'urgency'>>} changes - properties of the
+ * @param {Partial<Props>} changes - properties of the
  *  extracted Task object that can be updated; 'Pick' is a 'helper' (see jsdoc)
  * Other helpers:
  *  - Partial: makes properties optional
@@ -75,26 +75,29 @@ export const addTaskToHtml = (id) => {
  */
 export const updateHtmlTask = (id, changes) => {
     // Keep in mind that 'due' and 'urgency' can also be passed but we dont do anything with them yet
-    const { completed, due, title, urgency } = changes;
+    const { completed, title } = changes;
 
     //An html element
-    const element = getHtml('task', id);
+    const element = getHtml({ dataAtrr: 'task', value: id });
 
     const hasCompleted = completed !== undefined;
-    const hasDue = due !== undefined;
     const hasTitle = title !== undefined;
-    const hasUrgency = urgency !== undefined;
 
     if(hasCompleted){
         const inner = getHtml({ dataAtrr: 'checkbox', target: element });
+        //Checking if 'selected' is NOT in inner (which is an html element)
+        if(!('selected' in inner)) throw new Error('Expected input element');
         inner.selected = completed;
     };
 
+    console.log(title);
+
     if(hasTitle){
         const inner = getHtml({ dataAtrr: 'checkbox', target: element });
+        inner.innerText = title;
     };
-
 }
+
 /**
  * Abstracted function that has beem composed of previous two functions and encapsulates all 
  * the behavior associated (abstraction built from other abstractions that composes and combines
@@ -109,5 +112,7 @@ export const createTask = (props) => {
         completed: false,
         ...props
         }        
-    )
-}
+    );
+};
+
+export default createTask;
