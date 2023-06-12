@@ -9,7 +9,7 @@ window.addEventListener('error', () => {
 });
 
 const createAddingHtml = () => {
-    const element = getHtml('adding');
+    const element = getHtml({ dataAtrr: 'adding' });
 
     const button = document.createElement('button');
     button.className = 'button';
@@ -33,3 +33,4 @@ const list = [
         due: new Date(),
     }),
 ];
+
