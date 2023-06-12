@@ -8,7 +8,7 @@
  */
 
 import { getHtml, doesHtmlExist, createUniqueId } from "./helpers";
-import { Task } from './state';
+import { Task, State, Filters } from './state';
 
 /**
  * Main function to display and add each task
@@ -115,7 +115,6 @@ export const createTask = (props) => {
         completed: false,
         created: new Date(),
         ...props,
-
     }
 
 
@@ -128,17 +127,76 @@ export const createTask = (props) => {
     );
 
     return {
+        //The 'gets' and 'sets' create a more strict interface to narrow down amount of errors
+
         //When you 'get' an object, you have to 'set' its value; one cannot be without the other
         get id () {
             return state.id;
-        }
+        },
 
-        completed,
-        created,
-        due,
-        id,
-        title,
-        urgency,
+        /**
+         * Returning an error when the id is changed
+         * A value needs to be parsed into 'set' even when the value is not used
+         */
+        set id (newValue) {
+            throw new Error('Cannot directly change ID');
+        },
+
+        get completed () {
+            return state.completed;
+        },
+
+        //Checking if newValue is the same as state.completed
+        set completed (newValue) {
+            if (typeof newValue !== boolean) throw new Error('completed is not a boolean');
+            if (newValue === state.completed) return; //return nothing when values are the same
+            state.completed = newValue; //Otherwise set state.completed to newValue
+        },
+
+        get created () {
+            return state.created;
+        },
+
+        set created (newValue) {
+            throw new Error('Cannot directly change created');
+        },
+
+        get title () {
+            return state.title;
+        },
+
+        set title (newValue) {
+            if (!newValue || typeof newValue !== 'string' || newValue.trim() === '') {
+                throw new Error('\"title\" is required to be a non-empty string');
+            };
+        },
+
+        get urgency () {
+            return state.urgency;
+        },
+
+        set urgency (newValue) {
+            /**
+             * @type {Array<Urgency>} 
+             */
+            const valid = ['high', 'low', 'medium'];
+            if(!valid.includes(newValue)) {
+                throw new Error('Valid is required to be high, low or medium');
+            };
+        },
+
+        get due () {
+            return state.due;
+        },
+
+        set due (newValue) {
+            if(!(newValue instanceof Date)) {
+                throw new Error('due is required to be a date');
+            }
+
+            state.due = newValue;
+        },
+        
     };
 };
 
