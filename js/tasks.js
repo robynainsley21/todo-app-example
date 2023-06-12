@@ -19,9 +19,9 @@ import { Task } from './state';
 export const addTaskToHtml = (id) => {
     //checking if the id is in the html already 
     if(doesHtmlExist('task', id)) {
-        throw new Error('Task with that id already added');
-
+        throw new Error('Task with that ID already added');
     } 
+
     //checking if data-list exists
     const list = getHtml({ dataAtrr: 'list' });
     //previous code before abstraction
@@ -90,10 +90,8 @@ export const updateHtmlTask = (id, changes) => {
         inner.selected = completed;
     };
 
-    console.log(title);
-
     if(hasTitle){
-        const inner = getHtml({ dataAtrr: 'checkbox', target: element });
+        const inner = getHtml({ dataAtrr: 'title', target: element });
         inner.innerText = title;
     };
 }
@@ -103,16 +101,45 @@ export const updateHtmlTask = (id, changes) => {
  * the behavior associated (abstraction built from other abstractions that composes and combines
  * them into a higher level idea)
  * @param {Omit<Props, 'completed'>} props
+ * @returns {Task}
  */
 export const createTask = (props) => {
     const id = createUniqueId();
+
+    /**
+     * Internal state of the task when clicked on
+     * @type {Task}
+     */
+    const state = {
+        id,
+        completed: false,
+        created: new Date(),
+        ...props,
+
+    }
+
+
     addTaskToHtml(id);
 
     updateHtmlTask(id, {
         completed: false,
-        ...props
+        ...props,
         }        
     );
+
+    return {
+        //When you 'get' an object, you have to 'set' its value; one cannot be without the other
+        get id () {
+            return state.id;
+        }
+
+        completed,
+        created,
+        due,
+        id,
+        title,
+        urgency,
+    };
 };
 
 export default createTask;
