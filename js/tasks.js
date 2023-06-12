@@ -1,4 +1,3 @@
-//@ts-check
 /**
  * Notes by author + from lecture
  * - Do not write abstractions specifically according to SOLID rules, just use them as guides
@@ -151,6 +150,11 @@ export const createTask = (props) => {
             if (typeof newValue !== boolean) throw new Error('completed is not a boolean');
             if (newValue === state.completed) return; //return nothing when values are the same
             state.completed = newValue; //Otherwise set state.completed to newValue
+
+            updateHtmlTask(id, {
+                completed: newValue,
+
+            });
         },
 
         get created () {
@@ -169,6 +173,8 @@ export const createTask = (props) => {
             if (!newValue || typeof newValue !== 'string' || newValue.trim() === '') {
                 throw new Error('\"title\" is required to be a non-empty string');
             };
+
+            state.title = newValue;
         },
 
         get urgency () {
